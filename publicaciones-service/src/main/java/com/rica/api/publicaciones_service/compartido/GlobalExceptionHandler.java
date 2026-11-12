@@ -10,6 +10,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.rica.api.publicaciones_service.publicaciones.aplicacion.LimiteAnualExcedidoException;
 import com.rica.api.publicaciones_service.publicaciones.aplicacion.ServicioNoDisponibleException;
 
 @RestControllerAdvice 
@@ -23,6 +24,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ServicioNoDisponibleException.class)
     public ResponseEntity<Map<String, Object>> manejarServicioNoDisponible(ServicioNoDisponibleException ex) {
         return construirRespuesta(HttpStatus.SERVICE_UNAVAILABLE, ex.getMessage());
+    }
+
+    @ExceptionHandler(LimiteAnualExcedidoException.class)
+    public ResponseEntity<Map<String, Object>> manejarLimiteAnual(LimiteAnualExcedidoException ex) {
+        return construirRespuesta(HttpStatus.CONFLICT, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

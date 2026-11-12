@@ -75,6 +75,14 @@ public class InvestigadorService implements InvestigadorUseCase{
     public void confirmarEliminacion(String correoInstitucional) {
         repositorioInvestigadores.buscarPorCorreo(correoInstitucional)
                 .filter(Investigador::estaEnEliminacion)
-                .ifPresent(repositorioInvestigadores::eliminar);
+                .ifPresent(investigador -> {
+                    repositorioInvestigadores.eliminar(investigador);
+                    // L8 · Paso 2: los consumidores (p. ej. consultas-service) se enteran de que ya no existe.
+                    // Se publica con el mismo Outbox: el evento se guarda en la misma transacción que la eliminación.
+                    publicadorEventos.publicar(
+                            "investigadores.eliminados",
+                            correoInstitucional,
+                            Map.of("correoInstitucional", correoInstitucional));
+                });
     }
 }

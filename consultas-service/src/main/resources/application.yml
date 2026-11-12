@@ -1,0 +1,23 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: consultas-service
+  mongodb:
+    # Base propia del lado de lectura (rica_consultas): nada que ver con la base "rica" de publicaciones-service.
+    # Mismo contenedor MongoDB (puerto 27019 del docker-compose de publicaciones-service), otra base de datos.
+    uri: mongodb://localhost:27019/rica_consultas
+
+  kafka:
+    bootstrap-servers: localhost:9092
+    consumer:
+      group-id: consultas-service-v3
+      auto-offset-reset: earliest
+
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka
